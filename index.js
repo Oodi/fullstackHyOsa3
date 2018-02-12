@@ -3,12 +3,16 @@ const app = express()
 const bodyParser = require('body-parser')
 const morgan = require('morgan')
 const cors = require('cors')
+const Person = require('./Mongo')
+
 
 app.use(cors())
 
 
 app.use(bodyParser.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+app.use(express.static('build'))
+
 
 let persons = [
     {
@@ -34,18 +38,28 @@ app.get('/info', (req, res) => {
 })
 
 app.get('/api/persons', (req, res) => {
-  res.json(persons)
+  Person
+  .find({})
+  .then(persons => {
+    res.json(persons.map(formatNote))
+  })
 })
 
-app.get('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const person =  persons.find(person => person.id === id)
-
-  if (person) {
-    res.json(person)
-  } else {
-    res.status(404).end()
+const formatNote = (note) => {
+  return {
+    name: note.name,
+    number: note.number,
+    id: note._id
+  }
 }
+
+
+app.get('/api/persons/:id', (req, res) => {
+  Person
+  .findById(req.params.id)
+  .then(note => {
+    response.json(formatNote(note))
+  })
 })
 
 const generateId = () => {
@@ -59,22 +73,27 @@ app.post('/api/persons', (req, res) => {
     return res.status(400).json({ error: 'content missing' })
   }
 
-  const person = {
+  const personn = new Person ( {
     name: body.name,
-    number: body.number,
-    id: generateId()
-  }
+    number: body.number
+  })
 
-  persons = persons.concat(person)
-
-  res.json(person)
+  personn
+  .save()
+  .then(savedNote => {
+    res.json(formatNote(savedNote))
+  })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  persons =  persons.filter(person => person.id !== id)
-
-  res.status(204).end()
+  Person
+  .findByIdAndRemove(req.params.id)
+  .then(result => {
+    res.status(204).end()
+  })
+  .catch(error => {
+    res.status(400).send({ error: 'malformatted id' })
+  })
 })
 
 const PORT = process.env.PORT || 3001
