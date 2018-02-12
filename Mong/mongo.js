@@ -5,7 +5,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 }
 
-// korvaa url oman tietokantasi urlilla. ethän laita salasanaa Gothubiin!
+// korvaa url oman tietokantasi urlilla. ethän laita salasanaa Gothubiin! Tset
 const url = process.env.MONGODB_URI
 
 mongoose.connect(url)
