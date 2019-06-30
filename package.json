@@ -19,14 +19,14 @@
   },
   "homepage": "https://github.com/Oodi/fullstackHyOsa3#readme",
   "devDependencies": {
-    "nodemon": "^1.14.12"
+    "nodemon": "*"
   },
   "dependencies": {
-    "cors": "^2.8.4",
-    "cross": "^1.0.0",
-    "dotenv": "^5.0.0",
-    "express": "^4.16.2",
-    "mongoose": "^5.0.4",
-    "morgan": "^1.9.0"
+    "cors": "*",
+    "cross": "*",
+    "dotenv": "*",
+    "express": "*",
+    "mongoose": "*",
+    "morgan": "*"
   }
 }
